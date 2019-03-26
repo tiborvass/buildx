@@ -39,7 +39,9 @@ if ! docker inspect "$cacheVolume" 2>&1 >/dev/null ; then
 cacheVolume=$(docker create --name=buildx-cache -v /root/.cache -v /go/pkg/mod alpine)
 fi
 
-docker run --rm -v /tmp --volumes-from=$cacheVolume --privileged $iid go test ${TESTFLAGS:--v} ${TESTPKGS:-./...}
+docker run --rm -v /tmp -v /tmp/out:/out --volumes-from=$cacheVolume --privileged $iid go test -c -o /out/testbin ./integration-cli # go test ${TESTFLAGS:--v} ${TESTPKGS:-./...}
+
+DOCKER_API_VERSION=1.39 ./hack/shell /out/testbin -test.v -check.vv
 
 if [ -n "$BUILDX_NOCACHE" ]; then
   docker rm -v $cacheVolume

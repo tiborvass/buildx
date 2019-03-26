@@ -5,10 +5,10 @@ set -e
 : ${TMUX=}
 
 function clean {
-  docker rmi $(cat $iidfile)
+	docker rmi $(cat $iidfile)
 }
 
 iidfile=$(mktemp -t docker-iidfile.XXXXXXXXXX)
 DOCKER_BUILDKIT=1 docker build --iidfile $iidfile --target demo-env .
 trap clean EXIT
-docker run -it --privileged --rm -e TMUX_ENTRYPOINT=$TMUX $(cat $iidfile)
+docker run -v /tmp/out:/out -it --privileged --rm -e TMUX_ENTRYPOINT=$TMUX -e DOCKER_API_VERSION $(cat $iidfile) "$@"

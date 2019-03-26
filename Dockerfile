@@ -59,6 +59,8 @@ COPY ./hack/demo-env/entrypoint.sh /usr/local/bin
 COPY ./hack/demo-env/tmux.conf /root/.tmux.conf
 COPY --from=dockerd-release /usr/local/bin /usr/local/bin
 COPY --from=docker-cli-build /go/src/github.com/docker/cli/build/docker /usr/local/bin
+COPY ./integration-cli/Dockerfile /tmp/Dockerfile
+ENV DOCKERFILE /tmp/Dockerfile
 
 # Temporary buildkitd binaries. To be removed.
 COPY --from=moby/buildkit /usr/bin/build* /usr/local/bin
@@ -69,3 +71,4 @@ COPY ./hack/demo-env/examples .
 COPY --from=binaries / /usr/local/bin/
 VOLUME /var/lib/docker
 ENTRYPOINT ["entrypoint.sh"]
+CMD ["sh"]

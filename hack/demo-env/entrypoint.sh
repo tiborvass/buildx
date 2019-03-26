@@ -9,9 +9,7 @@ if [ -n "$TMUX_ENTRYPOINT" ]; then
   tmux a -t demo
 else
   ( $dockerdCmd 2>/var/log/dockerd.log & )
-  exec sh
+  sleep 3
+  docker pull hello-world
+  exec "$@"
 fi
-
-
-
-

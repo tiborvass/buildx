@@ -22,13 +22,16 @@ require (
 	github.com/denisenkom/go-mssqldb v0.0.0-20190315220205-a8ed825ac853 // indirect
 	github.com/docker/cli v0.0.0-20190321234815-f40f9c240ab0
 	github.com/docker/compose-on-kubernetes v0.4.19-0.20190128150448-356b2919c496 // indirect
+	github.com/docker/docker v1.14.0-0.20190319215453-e7b5f7dbe98c
 	github.com/docker/docker-credential-helpers v0.6.1 // indirect
 	github.com/docker/go v1.5.1-1.0.20160303222718-d30aec9fd63c // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-metrics v0.0.0-20170502235133-d466d4f6fd96 // indirect
+	github.com/docker/go-units v0.3.1
 	github.com/docker/libtrust v0.0.0-20150526203908-9cbd2a1374f4 // indirect
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
+	github.com/go-check/check v0.0.0-20180628173108-788fd7840127
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
 	github.com/gogo/googleapis v1.1.0 // indirect
@@ -55,6 +58,7 @@ require (
 	github.com/moby/buildkit v0.4.1-0.20190322070013-03feb5e28f65
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/opencontainers/go-digest v1.0.0-rc1
 	github.com/opencontainers/image-spec v1.0.1
 	github.com/opencontainers/runtime-spec v1.0.1 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
@@ -68,6 +72,7 @@ require (
 	github.com/spf13/viper v1.3.2 // indirect
 	github.com/syndtr/gocapability v0.0.0-20180916011248-d98352740cb2 // indirect
 	github.com/theupdateframework/notary v0.6.1 // indirect
+	github.com/vdemeester/shakers v0.1.0 // indirect
 	github.com/xlab/handysort v0.0.0-20150421192137-fb3537ed64a1 // indirect
 	golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f
 	golang.org/x/sys v0.0.0-20190322080309-f49334f85ddc // indirect
@@ -77,6 +82,7 @@ require (
 	gopkg.in/fatih/pool.v2 v2.0.0 // indirect
 	gopkg.in/gorethink/gorethink.v3 v3.0.5 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
+	gotest.tools v2.2.0+incompatible
 	k8s.io/api v0.0.0-20180712090710-2d6f90ab1293 // indirect
 	k8s.io/apimachinery v0.0.0-20180621070125-103fd098999d // indirect
 	k8s.io/client-go v2.0.0-alpha.0.0.20180806134042-1f13a808da65+incompatible // indirect
