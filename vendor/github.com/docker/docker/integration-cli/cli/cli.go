@@ -134,7 +134,7 @@ func validateArgs(args ...string) error {
 
 // Build executes the specified docker build command
 func Build(name string) icmd.Cmd {
-	return icmd.Command("build", "-t", name)
+	return icmd.Command("buildx", "build", "-t", name)
 }
 
 // Inspect executes the specified docker inspect command
