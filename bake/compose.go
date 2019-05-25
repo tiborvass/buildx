@@ -2,10 +2,19 @@ package bake
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/docker/cli/cli/compose/loader"
 	composetypes "github.com/docker/cli/cli/compose/types"
 )
+
+type errNoBuildNorImage struct {
+	service string
+}
+
+func (e errNoBuildNorImage) Error() string {
+	return fmt.Sprintf("compose file invalid: service %s has neither an image nor a build context specified. At least one must be provided.", e.service)
+}
 
 func parseCompose(dt []byte) (*composetypes.Config, error) {
 	parsed, err := loader.ParseYAML([]byte(dt))
@@ -28,6 +37,7 @@ func ParseCompose(dt []byte) (*Config, error) {
 	}
 
 	var c Config
+	var zeroBuildConfig composetypes.BuildConfig
 	if len(cfg.Services) > 0 {
 		c.Group = map[string]Group{}
 		c.Target = map[string]Target{}
@@ -35,6 +45,14 @@ func ParseCompose(dt []byte) (*Config, error) {
 		var g Group
 
 		for _, s := range cfg.Services {
+
+			if reflect.DeepEqual(s.Build, zeroBuildConfig) {
+				// if not make sure they're setting an image or it's invalid d-c.yml
+				if s.Image == "" {
+					return nil, errNoBuildNorImage{s.Name}
+				}
+				continue
+			}
 
 			var contextPathP *string
 			if s.Build.Context != "" {
@@ -45,14 +63,6 @@ func ParseCompose(dt []byte) (*Config, error) {
 			if s.Build.Dockerfile != "" {
 				dockerfilePath := s.Build.Dockerfile
 				dockerfilePathP = &dockerfilePath
-			}
-			// Check if there's actually a dockerfile mentioned
-			if dockerfilePathP == nil && contextPathP == nil {
-				// if not make sure they're setting an image or it's invalid d-c.yml
-				if s.Image == "" {
-					return nil, fmt.Errorf("Compose file invalid: Service %s has neither an image nor a build context specified. At least one must be provided.", s.Name)
-				}
-				break
 			}
 			g.Targets = append(g.Targets, s.Name)
 			t := Target{
