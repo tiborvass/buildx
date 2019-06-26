@@ -86,3 +86,9 @@ require (
 )
 
 replace github.com/jaguilar/vt100 => github.com/tonistiigi/vt100 v0.0.0-20190402012908-ad4c4a574305
+
+replace github.com/docker/docker => github.com/docker/docker v0.7.3-0.20190511020111-3998dffb806f
+
+replace k8s.io/client-go => k8s.io/client-go v0.0.0-20180806134042-1f13a808da65
+
+go 1.13
