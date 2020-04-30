@@ -13,10 +13,10 @@ import (
 )
 
 type bakeOptions struct {
+	commonOptions
 	files     []string
 	printOnly bool
 	overrides []string
-	commonOptions
 }
 
 func runBake(dockerCli command.Cli, targets []string, in bakeOptions) error {
@@ -46,11 +46,11 @@ func runBake(dockerCli command.Cli, targets []string, in bakeOptions) error {
 	} else if in.exportLoad {
 		overrides = append(overrides, "*.output=type=docker")
 	}
-	if in.noCache != nil {
-		overrides = append(overrides, fmt.Sprintf("*.no-cache=%t", *in.noCache))
+	if in.Lookup("no-cache").Changed {
+		overrides = append(overrides, fmt.Sprintf("*.no-cache=%t", in.noCache))
 	}
-	if in.pull != nil {
-		overrides = append(overrides, fmt.Sprintf("*.pull=%t", *in.pull))
+	if in.Lookup("pull").Changed {
+		overrides = append(overrides, fmt.Sprintf("*.pull=%t", in.pull))
 	}
 
 	m, err := bake.ReadTargets(ctx, in.files, targets, overrides)
@@ -112,6 +112,7 @@ func bakeCmd(dockerCli command.Cli, rootOpts *rootOptions) *cobra.Command {
 	}
 
 	flags := cmd.Flags()
+	options.FlagSet = flags
 
 	flags.StringArrayVarP(&options.files, "file", "f", []string{}, "Build definition file")
 	flags.BoolVar(&options.printOnly, "print", false, "Print the options without building")

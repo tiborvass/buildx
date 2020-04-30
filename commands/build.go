@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/docker/buildx/build"
-	"github.com/docker/buildx/util/flagutil"
 	"github.com/docker/buildx/util/platformutil"
 	"github.com/docker/buildx/util/progress"
 	"github.com/docker/cli/cli"
@@ -63,10 +62,11 @@ type buildOptions struct {
 }
 
 type commonOptions struct {
+	*pflag.FlagSet
 	builder    string
-	noCache    *bool
+	noCache    bool
 	progress   string
-	pull       *bool
+	pull       bool
 	exportPush bool
 	exportLoad bool
 }
@@ -81,15 +81,6 @@ func runBuild(dockerCli command.Cli, in buildOptions) error {
 
 	ctx := appcontext.Context()
 
-	noCache := false
-	if in.noCache != nil {
-		noCache = *in.noCache
-	}
-	pull := false
-	if in.pull != nil {
-		pull = *in.pull
-	}
-
 	opts := build.Options{
 		Inputs: build.Inputs{
 			ContextPath:    in.contextPath,
@@ -99,8 +90,8 @@ func runBuild(dockerCli command.Cli, in buildOptions) error {
 		Tags:        in.tags,
 		Labels:      listToMap(in.labels, false),
 		BuildArgs:   listToMap(in.buildArgs, true),
-		Pull:        pull,
-		NoCache:     noCache,
+		Pull:        in.pull,
+		NoCache:     in.noCache,
 		Target:      in.target,
 		ImageIDFile: in.imageIDFile,
 		ExtraHosts:  in.extraHosts,
@@ -225,6 +216,7 @@ func buildCmd(dockerCli command.Cli, rootOpts *rootOptions) *cobra.Command {
 	}
 
 	flags := cmd.Flags()
+	options.FlagSet = flags
 
 	flags.BoolVar(&options.exportPush, "push", false, "Shorthand for --output=type=registry")
 	flags.BoolVar(&options.exportLoad, "load", false, "Shorthand for --output=type=docker")
@@ -305,9 +297,9 @@ func buildCmd(dockerCli command.Cli, rootOpts *rootOptions) *cobra.Command {
 }
 
 func commonBuildFlags(options *commonOptions, flags *pflag.FlagSet) {
-	flags.Var(flagutil.Tristate(options.noCache), "no-cache", "Do not use cache when building the image")
+	flags.BoolVar(&options.noCache, "no-cache", false, "Do not use cache when building the image")
 	flags.StringVar(&options.progress, "progress", "auto", "Set type of progress output (auto, plain, tty). Use plain to show container output")
-	flags.Var(flagutil.Tristate(options.pull), "pull", "Always attempt to pull a newer version of the image")
+	flags.BoolVar(&options.pull, "pull", false, "Always attempt to pull a newer version of the image")
 }
 
 func listToMap(values []string, defaultEnv bool) map[string]string {
